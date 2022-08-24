@@ -5,12 +5,28 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+let users = []
+
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  socket.on('registration', (hash) => {
+    
+    let client = {
+      hash:hash,
+      clientIp:socket.handshake.address,
+      socketId:socket.id
+    };
+
+    users.push(client)
+    console.log(client.hash + ' connected');
+    console.log(client.socketId + ' connected');
+    console.log(client.clientIp + ' connected');
+
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');

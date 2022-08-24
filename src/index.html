@@ -74,6 +74,9 @@
         var form = document.getElementById('form');
         var input = document.getElementById('input');
 
+        const hash = document.URL.split("?")[1] 
+        socket.emit('registration', hash);
+
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             if (input.value) {
@@ -88,7 +91,7 @@
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
-        
+
     </script>
 </body>
 
