@@ -7,9 +7,12 @@ const io = new Server(server);
 
 let users = []
 
-
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.send('<h1>Bem vindo ao sistema dix</h1>');
+});
+
+app.get('/registration', (req, res) => {
+  res.sendFile(__dirname + '/registration.html');
 });
 
 io.on('connection', (socket) => {
@@ -25,7 +28,6 @@ io.on('connection', (socket) => {
     console.log(client.hash + ' connected');
     console.log(client.socketId + ' connected');
     console.log(client.clientIp + ' connected');
-
   });
 
   socket.on('disconnect', () => {

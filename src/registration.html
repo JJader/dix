@@ -64,7 +64,8 @@
 <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
+        <input id="input_target" autocomplete="off" />
+        <input id="input_value" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -72,16 +73,17 @@
 
         var messages = document.getElementById('messages');
         var form = document.getElementById('form');
-        var input = document.getElementById('input');
+        var input_value = document.getElementById('input_value');
+        var input_target = document.getElementById('input_target');
 
         const hash = document.URL.split("?")[1] 
         socket.emit('registration', hash);
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            if (input.value) {
-                socket.emit('chat message', input.value);
-                input.value = '';
+            if (input_value.value) {
+                socket.emit('chat message', input_value.value + " " + input_target.value);
+                input_value.value = '';
             }
         });
 
