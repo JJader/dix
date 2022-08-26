@@ -17,11 +17,12 @@ app.get('/registration', (req, res) => {
 
 io.on('connection', (socket) => {
   socket.on('registration', (hash) => {
-    
+
     let client = {
-      hash:hash,
-      clientIp:socket.handshake.address,
-      socketId:socket.id
+      hash: hash,
+      clientIp: socket.handshake.address,
+      socketId: socket.id,
+      money: 100
     };
 
     users.push(client)
@@ -36,9 +37,18 @@ io.on('connection', (socket) => {
 });
 
 io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-    console.log('message: ' + msg);
+  socket.on('send', (data) => {
+
+    let target_client = users.find(
+      client => client.hash == data.target_hash
+    )
+
+    if (target_client) {
+      io.to(target_client.socketId).emit('send', data)
+    }
+
+    console.log('message: ' + target_client.hash);
+
   });
 });
 
