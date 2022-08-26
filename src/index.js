@@ -49,14 +49,22 @@ io.on('connection', (socket) => {
 
     if (target_index != -1) {
 
+      users[target_index].value = users[target_index].value + data.value
+      users[source_index].value = users[source_index].value - data.value
+
       io.to(users[target_index].socketId).emit('alert', data.source_hash + ' sent ' + data.value + ' to you ')
       io.to(users[source_index].socketId).emit('alert', ' You sent ' + data.value + ' to ' + users[target_index].hash)
-      
+
+      io.to(users[target_index].socketId).emit('update_value', users[target_index].value)
+      io.to(users[source_index].socketId).emit('update_value', users[source_index].value)
+
       console.log(data.source_hash + ' sent ' + data.value + ' to ' + users[target_index].hash);
+      console.log('target money ' + users[target_index].value);
+      console.log('source money ' + users[source_index].value);
     }
-    else{
+    else {
       io.to(users[source_index].socketId).emit('alert', 'Client not found')
-      
+
       console.log('Client not found');
     }
 
