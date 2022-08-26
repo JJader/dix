@@ -62,7 +62,8 @@
 </head>
 
 <body>
-    <h1 id="money">Money</h1>
+    <h1 >Saldo: </h1>
+    <h2 id="money">100</h2>
 
     <ul id="messages"></ul>
     <form id="form" action="">
@@ -85,7 +86,7 @@
             e.preventDefault();
             if (input_value.value) {
                 let data = {
-                    value: input_value.value,
+                    value: parseFloat(input_value.value),
                     target_hash: input_target.value,
                     source_hash: hash
                 }
