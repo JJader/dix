@@ -84,7 +84,8 @@
             if (input_value.value) {
                 let data = {
                     value: input_value.value,
-                    target_hash: input_target.value
+                    target_hash: input_target.value,
+                    source_hash: hash
                 }
 
                 socket.emit('send', data);
@@ -94,6 +95,13 @@
         });
 
         socket.on('send', function (msg) {
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        socket.on('alert', function (msg) {
             var item = document.createElement('li');
             item.textContent = msg;
             messages.appendChild(item);

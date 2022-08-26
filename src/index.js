@@ -39,15 +39,26 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
   socket.on('send', (data) => {
 
-    let target_client = users.find(
+    let target_index = users.findIndex(
       client => client.hash == data.target_hash
     )
 
-    if (target_client) {
-      io.to(target_client.socketId).emit('send', data)
-    }
+    let source_index = users.findIndex(
+      client => client.hash == data.source_hash
+    )
 
-    console.log('message: ' + target_client.hash);
+    if (target_index != -1) {
+
+      io.to(users[target_index].socketId).emit('alert', data.source_hash + ' sent ' + data.value + ' to you ')
+      io.to(users[source_index].socketId).emit('alert', ' You sent ' + data.value + ' to ' + users[target_index].hash)
+      
+      console.log(data.source_hash + ' sent ' + data.value + ' to ' + users[target_index].hash);
+    }
+    else{
+      io.to(users[source_index].socketId).emit('alert', 'Client not found')
+      
+      console.log('Client not found');
+    }
 
   });
 });
