@@ -5,6 +5,9 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+const crypto = require('crypto');
+
+hash = crypto.getHashes();
 let users = []
 
 app.get('/', (req, res) => {
@@ -18,12 +21,17 @@ app.get('/registration', (req, res) => {
 io.on('connection', (socket) => {
   socket.on('registration', (hash) => {
 
+    // hash = hash + Math.random().toString(5).substring(1)
+    // let hashPwd = crypto.createHash('sha1').update(hash).digest('hex');
+
     let client = {
       hash: hash,
       clientIp: socket.handshake.address,
       socketId: socket.id,
       money: 100
     };
+
+    // io.to(client.socketId).emit('update_hash', client.hash)
 
     users.push(client)
     console.log(client.hash + ' connected');

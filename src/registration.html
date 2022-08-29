@@ -62,13 +62,16 @@
 </head>
 
 <body>
-    <h1 >Saldo: </h1>
+    <h1>Hash: </h1>
+    <h2 id="user_hash">hash</h2>
+
+    <h1>Saldo: </h1>
     <h2 id="money">100</h2>
 
     <ul id="messages"></ul>
     <form id="form" action="">
         <input id="input_target" autocomplete="off" placeholder="Target" />
-        <input id="input_value" type="number" autocomplete="off" placeholder="Value"/><button>Send</button>
+        <input id="input_value" type="number" autocomplete="off" placeholder="Value" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -78,8 +81,10 @@
         var form = document.getElementById('form');
         var input_value = document.getElementById('input_value');
         var input_target = document.getElementById('input_target');
-        
-        const hash = document.URL.split("?")[1] 
+
+
+        const hash = document.URL.split("?")[1]
+
         socket.emit('registration', hash);
 
         form.addEventListener('submit', function (e) {
@@ -99,7 +104,12 @@
 
         socket.on('update_value', function (value) {
             var hNode = document.getElementById("money");
-            hNode.textContent  = value
+            hNode.textContent = value
+        });
+
+        socket.on('update_hash', function (hash) {
+            var user_hash = document.getElementById("user_hash");
+            user_hash.textContent = hash
         });
 
         socket.on('alert', function (msg) {
