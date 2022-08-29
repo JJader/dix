@@ -32,7 +32,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    let index = users.findIndex(
+      client => client.socketId == socket.id
+    )
+
+    users.splice(index, 1)
+
   });
 });
 
@@ -74,3 +79,14 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
+
+/*
+
+[x] Tratar o disconnect
+[] Cada par deve ter um id gerado por uma hash
+[] cada hash deve ser atualizada a cada período
+[] Tem que ser hash -> ip 
+[] Transação registrada em log
+
+
+*/
