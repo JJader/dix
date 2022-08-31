@@ -10,8 +10,15 @@ const crypto = require('crypto');
 hash = crypto.getHashes();
 let users = []
 
+function update_hash(){
+  
+  console.log("Ola thiagos")
+}
+
+setInterval(update_hash, 100);
+
 app.get('/', (req, res) => {
-  res.send('<h1>Bem vindo ao sistema dix</h1>');
+  res.send('<h1>Bem vindo ao sistema Dix</h1>');
 });
 
 app.get('/registration', (req, res) => {
@@ -68,7 +75,7 @@ io.on('connection', (socket) => {
       client => client.hash == data.source_hash
     )
 
-    if (target_index != -1) {
+    if (target_index != -1 && source_index != -1 && target_index != source_index && data.value > 0) {
 
       users[target_index].money = users[target_index].money + data.value
       users[source_index].money = users[source_index].money - data.value
@@ -86,7 +93,7 @@ io.on('connection', (socket) => {
     else {
       io.to(users[source_index].socketId).emit('alert', 'Client not found')
 
-      console.log('Client not found');
+      console.log('Invalid transaction !!!');
     }
 
   });
@@ -101,8 +108,11 @@ server.listen(3000, () => {
 [x] Tratar o disconnect
 [x] Cada par deve ter um id gerado por uma hash
 [] cada hash deve ser atualizada a cada período
-[] Tem que ser hash -> ip 
+[x] Tem que ser hash -> ip 
 [] Transação registrada em log
+[] Melhorar log de transação inválida
+[] Melhorar a interface
+[] Tela de login
 
 
 */
