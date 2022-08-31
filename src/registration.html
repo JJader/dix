@@ -83,7 +83,7 @@
         var input_target = document.getElementById('input_target');
 
 
-        const hash = document.URL.split("?")[1]
+        var hash = document.URL.split("?")[1]
 
         socket.emit('registration', hash);
 
@@ -107,9 +107,10 @@
             hNode.textContent = value
         });
 
-        socket.on('update_hash', function (hash) {
+        socket.on('update_hash', function (new_hash) {
             var user_hash = document.getElementById("user_hash");
-            user_hash.textContent = hash
+            hash = new_hash
+            user_hash.textContent = new_hash
         });
 
         socket.on('alert', function (msg) {

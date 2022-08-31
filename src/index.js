@@ -21,30 +21,38 @@ app.get('/registration', (req, res) => {
 io.on('connection', (socket) => {
   socket.on('registration', (hash) => {
 
-    // hash = hash + Math.random().toString(5).substring(1)
-    // let hashPwd = crypto.createHash('sha1').update(hash).digest('hex');
+    hash = hash + Math.random().toString(5).substring(1)
+    let hashPwd = crypto.createHash('sha1').update(hash).digest('hex');
 
     let client = {
-      hash: hash,
+      hash: hashPwd,
       clientIp: socket.handshake.address,
       socketId: socket.id,
       money: 100
     };
 
-    // io.to(client.socketId).emit('update_hash', client.hash)
+    io.to(client.socketId).emit('update_hash', client.hash)
 
     users.push(client)
     console.log(client.hash + ' connected');
     console.log(client.socketId + ' connected');
     console.log(client.clientIp + ' connected');
+
+    users.forEach(element => {
+      console.log(element)
+    })
   });
 
   socket.on('disconnect', () => {
+
     let index = users.findIndex(
       client => client.socketId == socket.id
     )
 
-    users.splice(index, 1)
+    if (index != -1) {
+      console.log("User disconnect " + users[index].hash)
+      users.splice(index, 1)
+    }
 
   });
 });
@@ -91,7 +99,7 @@ server.listen(3000, () => {
 /*
 
 [x] Tratar o disconnect
-[] Cada par deve ter um id gerado por uma hash
+[x] Cada par deve ter um id gerado por uma hash
 [] cada hash deve ser atualizada a cada período
 [] Tem que ser hash -> ip 
 [] Transação registrada em log
