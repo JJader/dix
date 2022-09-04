@@ -22,11 +22,11 @@ function update_hash() {
 setInterval(update_hash, 15000);
 
 app.get('/', (req, res) => {
-  res.send('<h1>Bem vindo ao sistema DIX - Direct Investment eXchange</h1>');
+  res.sendFile(__dirname + '/login.html');
 });
 
-app.get('/registration', (req, res) => {
-  res.sendFile(__dirname + '/registration.html');
+app.get('/user', (req, res) => {
+  res.sendFile(__dirname + '/transaction.html');
 });
 
 io.on('connection', (socket) => {
@@ -108,10 +108,9 @@ server.listen(3000, () => {
 [x] Cada par deve ter um id gerado por uma hash
 [x] cada hash deve ser atualizada a cada período
 [x] Tem que ser hash -> ip 
-[] Transação registrada em log
+[x] Transação registrada em log
 [x] Melhorar log de transação inválida
-[] Melhorar a interface
-[] Tela de login
-
+[x] Melhorar a interface
+[x] Tela de login
 
 */
