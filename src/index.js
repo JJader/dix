@@ -74,7 +74,13 @@ io.on('connection', (socket) => {
       client => client.hash == data.source_hash
     )
 
-    if (target_index != -1 && source_index != -1 && target_index != source_index && data.value > 0) {
+    if (
+      target_index != -1 &&
+      source_index != -1 &&
+      target_index != source_index &&
+      data.value > 0 &&
+      data.value <= users[source_index].money
+    ) {
 
       users[target_index].money = users[target_index].money + data.value
       users[source_index].money = users[source_index].money - data.value
