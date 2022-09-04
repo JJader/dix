@@ -7,15 +7,19 @@ const io = new Server(server);
 
 const crypto = require('crypto');
 
-hash = crypto.getHashes();
 let users = []
 
-function update_hash(){
-  
-  console.log("Ola thiagos")
+function update_hash() {
+  users.forEach((client, index) => {
+
+    let hashPwd = crypto.createHash('sha1').update(client.hash).digest('hex');
+    users[index].hash = hashPwd
+    io.to(client.socketId).emit('update_hash', hashPwd)
+
+  })
 }
 
-setInterval(update_hash, 100);
+setInterval(update_hash, 15000);
 
 app.get('/', (req, res) => {
   res.send('<h1>Bem vindo ao sistema Dix</h1>');
@@ -28,9 +32,8 @@ app.get('/registration', (req, res) => {
 io.on('connection', (socket) => {
   socket.on('registration', (hash) => {
 
-    hash = hash + Math.random().toString(5).substring(1)
     let hashPwd = crypto.createHash('sha1').update(hash).digest('hex');
-
+    
     let client = {
       hash: hashPwd,
       clientIp: socket.handshake.address,
@@ -44,10 +47,6 @@ io.on('connection', (socket) => {
     console.log(client.hash + ' connected');
     console.log(client.socketId + ' connected');
     console.log(client.clientIp + ' connected');
-
-    users.forEach(element => {
-      console.log(element)
-    })
   });
 
   socket.on('disconnect', () => {
@@ -107,7 +106,7 @@ server.listen(3000, () => {
 
 [x] Tratar o disconnect
 [x] Cada par deve ter um id gerado por uma hash
-[] cada hash deve ser atualizada a cada período
+[x] cada hash deve ser atualizada a cada período
 [x] Tem que ser hash -> ip 
 [] Transação registrada em log
 [] Melhorar log de transação inválida
