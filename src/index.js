@@ -22,7 +22,7 @@ function update_hash() {
 setInterval(update_hash, 15000);
 
 app.get('/', (req, res) => {
-  res.send('<h1>Bem vindo ao sistema Dix</h1>');
+  res.send('<h1>Bem vindo ao sistema DIX - Direct Investment eXchange</h1>');
 });
 
 app.get('/registration', (req, res) => {
@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
   socket.on('registration', (hash) => {
 
     let hashPwd = crypto.createHash('sha1').update(hash).digest('hex');
-    
+
     let client = {
       hash: hashPwd,
       clientIp: socket.handshake.address,
@@ -44,9 +44,8 @@ io.on('connection', (socket) => {
     io.to(client.socketId).emit('update_hash', client.hash)
 
     users.push(client)
-    console.log(client.hash + ' connected');
-    console.log(client.socketId + ' connected');
-    console.log(client.clientIp + ' connected');
+    console.log(hash + ' connected in the DIX system');
+    console.log('-------------------------------------------------\n')
   });
 
   socket.on('disconnect', () => {
@@ -57,6 +56,7 @@ io.on('connection', (socket) => {
 
     if (index != -1) {
       console.log("User disconnect " + users[index].hash)
+      console.log('-------------------------------------------------\n')
       users.splice(index, 1)
     }
 
@@ -86,13 +86,13 @@ io.on('connection', (socket) => {
       io.to(users[source_index].socketId).emit('update_value', users[source_index].money)
 
       console.log(data.source_hash + ' sent ' + data.value + ' to ' + users[target_index].hash);
-      console.log('target money ' + users[target_index].money);
-      console.log('source money ' + users[source_index].money);
+      console.log('-------------------------------------------------\n')
     }
     else {
-      io.to(users[source_index].socketId).emit('alert', 'Client not found')
+      io.to(users[source_index].socketId).emit('alert', 'Invalid transaction !!!')
 
       console.log('Invalid transaction !!!');
+      console.log('-------------------------------------------------\n')
     }
 
   });
@@ -109,7 +109,7 @@ server.listen(3000, () => {
 [x] cada hash deve ser atualizada a cada período
 [x] Tem que ser hash -> ip 
 [] Transação registrada em log
-[] Melhorar log de transação inválida
+[x] Melhorar log de transação inválida
 [] Melhorar a interface
 [] Tela de login
 
