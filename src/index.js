@@ -19,7 +19,7 @@ function update_hash() {
   })
 }
 
-setInterval(update_hash, 15000);
+setInterval(update_hash, 60000);
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/login.html');
