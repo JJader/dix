@@ -5,6 +5,15 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+const mongoose = require('mongoose');
+const Msg = require('./models/messages');
+// const io = require('socket.io')(3000)
+const mongoDB = 'mongodb+srv://thiagosfig:thiago@cluster0.qyxlss0.mongodb.net/?retryWrites=true&w=majority';
+
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+  console.log('connected')
+}).catch(err => console.log(err))
+
 const crypto = require('crypto');
 
 let users = []
@@ -30,6 +39,20 @@ app.get('/user', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+
+  Msg.find().then(result => {
+    socket.emit('output-messages', result)
+  })
+
+  socket.on('chatmessage', msg => {
+    const message = new Msg({ msg });
+    message.save().then(() => {
+      io.emit('message', msg)
+    })
+
+    console.log("deu tudo certo")
+  });
+
   socket.on('registration', (hash) => {
 
     let hashPwd = crypto.createHash('sha1').update(hash).digest('hex');
@@ -104,7 +127,7 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
+server.listen(3001, () => {
   console.log('listening on *:3000');
 });
 

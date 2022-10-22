@@ -89,6 +89,7 @@
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
+
             if (input_value.value) {
                 let data = {
                     value: parseFloat(input_value.value),
@@ -97,10 +98,21 @@
                 }
 
                 socket.emit('send', data);
+                socket.emit('chatmessage', ' You sent ' + data.value + ' to ' + data.target_hash)
 
                 input_value.value = '';
             }
         });
+
+        socket.on('output-messages', data => {
+            console.log(data)
+            if (data.length) {
+                data.forEach(message => {
+                    const html = `<div>${message.msg}</div>`
+                    messages.innerHTML += html
+                });
+            }
+        })
 
         socket.on('update_value', function (value) {
             var hNode = document.getElementById("money");
