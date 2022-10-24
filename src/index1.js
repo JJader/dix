@@ -30,11 +30,16 @@ function update_hash() {
 
 setInterval(update_hash, 60000);
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/login.html');
-});
 
-app.get('/user', (req, res) => {
+const handler = num => (req,res)=>{
+	const { method, url, headers, body } = req;
+  res.sendFile(__dirname + '/transaction.html');
+}
+
+app.get('*', handler(1)).post('*', handler(1));
+
+
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/transaction.html');
 });
 
@@ -127,8 +132,10 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3001, () => {
-  console.log('listening on *:3000');
+
+
+server.listen(3000, () => {
+  console.log('listening on *:3001');
 });
 
 /*

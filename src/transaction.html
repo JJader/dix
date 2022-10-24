@@ -83,7 +83,7 @@
         var input_target = document.getElementById('input_target');
 
 
-        var hash = document.URL.split("?")[1]
+        var hash = "jath"
 
         socket.emit('registration', hash);
 
@@ -97,8 +97,10 @@
                     source_hash: hash
                 }
 
-                socket.emit('send', data);
-                socket.emit('chatmessage', ' You sent ' + data.value + ' to ' + data.target_hash)
+                // socket.emit('send', data);
+                let text = ' You sent ' + data.value + ' to ' + data.target_hash
+                socket.emit('chatmessage', text)
+                socket.emit('messages', text)
 
                 input_value.value = '';
             }
@@ -112,6 +114,12 @@
                     messages.innerHTML += html
                 });
             }
+        })
+
+        socket.on('messages', message => {
+            console.log(data)
+            const html = `<div>${message.msg}</div>`
+            messages.innerHTML += html
         })
 
         socket.on('update_value', function (value) {
