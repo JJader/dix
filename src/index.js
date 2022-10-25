@@ -21,6 +21,16 @@ function update_hash() {
 
 setInterval(update_hash, 60000);
 
+function get_server_hora() {
+    var today = new Date();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    // var time = 01 + ":" + today.getMinutes() + ":" + today.getSeconds();
+    // console.log(time)
+    return time;
+}
+
+setInterval(get_server_hora, 1000);
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/login.html');
 });
@@ -82,6 +92,14 @@ io.on('connection', (socket) => {
       data.value <= users[source_index].money
     ) {
 
+      let server_time = Date.now()
+
+      io.to(users[source_index].socketId).emit('update_hora', server_time)
+      io.to(users[target_index].socketId).emit('update_hora', server_time)
+
+      // console.log("Server time: " + get_server_hora())
+      // console.log("Client time: " + data.client_time)
+
       users[target_index].money = users[target_index].money + data.value
       users[source_index].money = users[source_index].money - data.value
 
@@ -95,9 +113,8 @@ io.on('connection', (socket) => {
       console.log('-------------------------------------------------\n')
     }
     else {
-      io.to(users[source_index].socketId).emit('alert', 'Invalid transaction !!!')
-
       console.log('Invalid transaction !!!');
+      io.to(users[source_index].socketId).emit('alert', 'Invalid transaction !!!')
       console.log('-------------------------------------------------\n')
     }
 
