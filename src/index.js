@@ -24,8 +24,6 @@ setInterval(update_hash, 60000);
 function get_server_hora() {
     var today = new Date();
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    // var time = 01 + ":" + today.getMinutes() + ":" + today.getSeconds();
-    // console.log(time)
     return time;
 }
 
